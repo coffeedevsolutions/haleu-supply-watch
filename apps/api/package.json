@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev --local --persist-to=.wrangler/state",
+    "dev": "wrangler dev --persist-to=.wrangler/state",
     "build": "wrangler deploy --dry-run",
     "seed:local": "wrangler d1 execute hsw --local --command \"INSERT OR IGNORE INTO source(id,name,url,type) VALUES (lower(hex(randomblob(16))),'DOE','https://www.energy.gov/','regulator');\""
   },
