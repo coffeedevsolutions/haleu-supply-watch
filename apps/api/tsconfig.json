@@ -3,7 +3,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@hsw/db/*": ["../../packages/db/*"]
+      "@hsw/db/*": ["../../packages/db/*"],
+      "@hsw/shared": ["../../packages/shared/src"],
+      "@hsw/shared/*": ["../../packages/shared/src/*"]
     }
   },
   "include": ["src/**/*"],

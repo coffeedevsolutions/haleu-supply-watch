@@ -1,0 +1,49 @@
+{
+  "reactorDesigns": [
+    {
+      "name": "Xe-100 (X-energy)",
+      "type": "HTGR",
+      "allowedFuelForms": ["TRISO"],
+      "enrichmentLevels": ["15-20%"],
+      "notes": "High-temperature gas-cooled reactor using TRISO fuel"
+    },
+    {
+      "name": "Natrium (TerraPower)",
+      "type": "SFR",
+      "allowedFuelForms": ["Metal", "Oxide"],
+      "enrichmentLevels": ["15-20%"],
+      "notes": "Sodium-cooled fast reactor with metallic fuel"
+    },
+    {
+      "name": "VOYGR (NuScale)",
+      "type": "PWR-SMR",
+      "allowedFuelForms": ["Oxide"],
+      "enrichmentLevels": ["<20%"],
+      "notes": "Small modular pressurized water reactor"
+    },
+    {
+      "name": "KP-FHR (Kairos Power)",
+      "type": "FHR",
+      "allowedFuelForms": ["TRISO"],
+      "enrichmentLevels": ["15-20%"],
+      "notes": "Fluoride salt-cooled high-temperature reactor"
+    },
+    {
+      "name": "MMR (Ultra Safe Nuclear)",
+      "type": "HTGR",
+      "allowedFuelForms": ["TRISO"],
+      "enrichmentLevels": ["<20%"],
+      "notes": "Micro modular reactor with fully ceramic microencapsulated fuel"
+    }
+  ],
+  "fuelForms": {
+    "TRISO": "Tri-structural isotropic particle fuel",
+    "Metal": "Metallic uranium fuel",
+    "Oxide": "Uranium dioxide fuel"
+  },
+  "enrichmentCategories": {
+    "<20%": "Below 20% U-235 (HALEU)",
+    "15-20%": "High-end HALEU range",
+    "5-20%": "Full HALEU spectrum"
+  }
+}

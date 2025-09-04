@@ -12,6 +12,7 @@
     "pages:preview": "wrangler pages dev .vercel/output/static --compatibility-date=2024-11-21"
   },
   "dependencies": {
+    "@hsw/shared": "workspace:*",
     "next": "^15.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

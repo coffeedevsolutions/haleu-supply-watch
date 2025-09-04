@@ -1,0 +1,6 @@
+id,allocated_to,kg,status,allocation_date,delivery_window_start,delivery_window_end,notes
+doe-2024-001,X-energy,1200,confirmed,1704067200,1735689600,1767225600,Initial production allocation for reactor fuel
+doe-2024-002,TerraPower,850,conditional,1706745600,1740787200,1772323200,Conditional on facility readiness
+doe-2024-003,NuScale Power,950,confirmed,1709251200,1743379200,1774915200,Phase 1 SMR deployment
+doe-2024-004,Kairos Power,750,conditional,1711929600,1746057600,1777593600,Pending regulatory approval
+doe-2024-005,Ultra Safe Nuclear,500,confirmed,1714521600,1748649600,1780185600,TRISO fuel development program
