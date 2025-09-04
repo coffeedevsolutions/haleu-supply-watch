@@ -1,0 +1,20 @@
+{
+  "name": "@hsw/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local --persist-to=.wrangler/state",
+    "build": "wrangler deploy --dry-run",
+    "seed:local": "wrangler d1 execute hsw --local --command \"INSERT OR IGNORE INTO source(id,name,url,type) VALUES (lower(hex(randomblob(16))),'DOE','https://www.energy.gov/','regulator');\""
+  },
+  "dependencies": {
+    "@hsw/db": "workspace:*",
+    "drizzle-orm": "^0.33.0",
+    "hono": "^4.5.7",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250100.0",
+    "wrangler": "^4.34.0"
+  }
+}

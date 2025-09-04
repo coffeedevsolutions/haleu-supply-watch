@@ -1,0 +1,19 @@
+{
+    "name":  "haleu-supply-watch",
+    "private":  true,
+    "packageManager":  "pnpm@9.12.1",
+    "type":  "module",
+    "scripts":  {
+                    "dev:web":  "pnpm --filter @hsw/web dev",
+                    "dev:api":  "pnpm --filter @hsw/api dev",
+                    "dev":  "pnpm -r dev",
+                    "build":  "pnpm -r build",
+                    "migrate:local":  "wrangler d1 execute hsw --local --file ./migrations/0001_init.sql",
+                    "seed:local":  "pnpm --filter @hsw/api seed:local",
+                    "lint":  "pnpm -r lint",
+                    "typecheck":  "pnpm -r typecheck"
+                },
+    "devDependencies":  {
+                            "typescript":  "^5.6.2"
+                        }
+}

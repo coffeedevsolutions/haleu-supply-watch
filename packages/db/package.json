@@ -1,0 +1,12 @@
+{
+  "name": "@hsw/db",
+  "private": true,
+  "type": "module",
+  "main": "src/schema.ts",
+  "exports": {
+    "./src/schema": "./src/schema.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.33.0"
+  }
+}

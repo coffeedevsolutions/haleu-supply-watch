@@ -1,0 +1,9 @@
+{
+  "name": "@hsw/etl",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "demo": "node ./push-demo.js"
+  },
+  "dependencies": {}
+}
