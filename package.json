@@ -4,16 +4,22 @@
     "packageManager":  "pnpm@9.12.1",
     "type":  "module",
     "scripts":  {
-                    "dev:web":  "pnpm --filter @hsw/web dev",
-                    "dev:api":  "pnpm --filter @hsw/api dev",
-                    "dev":  "pnpm -r dev",
-                    "build":  "pnpm -r build",
-                    "migrate:local":  "wrangler d1 execute hsw --local --file ./migrations/0001_init.sql",
-                    "seed:local":  "pnpm --filter @hsw/api seed:local",
-                    "lint":  "pnpm -r lint",
-                    "typecheck":  "pnpm -r typecheck"
-                },
+        "dev:web":  "pnpm --filter @hsw/web dev",
+        "dev:api":  "pnpm --filter @hsw/api dev",
+        "dev":  "pnpm -r dev",
+        "dev:init": "node scripts/dev.js init",
+        "dev:start": "node scripts/dev.js start",
+        "build":  "pnpm -r build",
+        "migrate:local":  "wrangler d1 execute hsw --local --file ./packages/database/migrations/0001_init.sql",
+        "seed:local":  "pnpm --filter @hsw/api seed:local",
+        "deploy": "node scripts/deploy.js full",
+        "deploy:api": "node scripts/deploy.js api",
+        "deploy:web": "node scripts/deploy.js web",
+        "lint":  "pnpm -r lint",
+        "typecheck":  "pnpm -r typecheck",
+        "test": "pnpm -r test"
+    },
     "devDependencies":  {
-                            "typescript":  "^5.6.2"
-                        }
+        "typescript":  "^5.6.2"
+    }
 }

@@ -1,0 +1,21 @@
+{
+  "name": "@hsw/database",
+  "private": true,
+  "type": "module",
+  "main": "./src/schema.ts",
+  "types": "./src/schema.ts",
+  "exports": {
+    ".": "./src/schema.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "scripts": {
+    "migrate:local": "wrangler d1 execute hsw --local --file ./migrations/0001_init.sql",
+    "migrate:remote": "wrangler d1 execute hsw --remote --file ./migrations/0001_init.sql",
+    "migrate:update:remote": "wrangler d1 execute hsw --remote --file ./migrations/0002_minimal_migration.sql",
+    "seed:local": "wrangler d1 execute hsw --local --file ./seeds/seed-local.sql",
+    "seed:remote": "wrangler d1 execute hsw --remote --file ./seeds/seed-remote.sql"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.33.0"
+  }
+}

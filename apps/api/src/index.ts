@@ -1,7 +1,5 @@
 import { Hono } from "hono";
 import { Env } from "./bindings";
-import { drizzle } from "drizzle-orm/d1";
-import * as schema from "./schema";
 import { 
   AllocationsBulkUpsertSchema, 
   DeliveryBatchesBulkUpsertSchema,
@@ -14,9 +12,11 @@ import {
 } from "@hsw/shared";
 import { corsMiddleware } from "./middleware/cors";
 import { createRateLimiter } from "./middleware/rateLimiter";
+import { createWebhookAuth } from "./middleware/webhook";
 import { checkIdempotency, setIdempotency } from "./utils/idempotency";
 import { log, logError, logRequest } from "./utils/logging";
 import { runDoeAllocations } from "./ingest/doeAllocations";
+import { runDOEHubIngest } from "./ingest/energyGovHub";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -31,6 +31,9 @@ app.onError((err, c) => {
 
 // Rate limiter for public endpoints
 const rateLimiter = createRateLimiter(60); // Default from env
+
+// Webhook authentication for internal endpoints
+const webhookAuth = createWebhookAuth();
 
 // Health endpoint
 app.get("/v1/health", (c) => {
@@ -82,7 +85,7 @@ app.get("/v1/allocations", rateLimiter, async (c) => {
     sql += ` ORDER BY updated_at DESC LIMIT ${query.limit + 1}`;
 
     const result = await c.env.DB.prepare(sql).bind(...params).all();
-    const items = result.results as Allocation[] || [];
+    const items = (result.results as unknown as Allocation[]) || [];
     
     // Determine if there's a next page
     let nextCursor: string | undefined;
@@ -161,7 +164,7 @@ app.get("/v1/changes", rateLimiter, async (c) => {
     sql += ` ORDER BY occurred_at DESC LIMIT ${query.limit + 1}`;
 
     const result = await c.env.DB.prepare(sql).bind(...params).all();
-    const items = result.results as UpdateEvent[] || [];
+    const items = (result.results as unknown as UpdateEvent[]) || [];
 
     // Determine if there's a next page
     let nextCursor: string | undefined;
@@ -218,8 +221,8 @@ app.get("/v1/documents/:id", rateLimiter, async (c) => {
   }
 });
 
-// Internal import endpoints (no rate limiting)
-app.post("/internal/import/allocations", async (c) => {
+// Internal import endpoints (webhook auth, no rate limiting)
+app.post("/internal/import/allocations", webhookAuth, async (c) => {
   const start = Date.now();
 
   try {
@@ -272,7 +275,7 @@ app.post("/internal/import/allocations", async (c) => {
         item.source_doc_id ?? null
       ).run();
 
-      if (result.changes && result.changes > 0) {
+      if (result.meta?.changes && result.meta.changes > 0) {
         upsertCount++;
       }
     }
@@ -312,7 +315,7 @@ app.post("/internal/import/allocations", async (c) => {
   }
 });
 
-app.post("/internal/import/deliveries", async (c) => {
+app.post("/internal/import/deliveries", webhookAuth, async (c) => {
   const start = Date.now();
 
   try {
@@ -358,7 +361,7 @@ app.post("/internal/import/deliveries", async (c) => {
         now
       ).run();
 
-      if (result.changes && result.changes > 0) {
+      if (result.meta?.changes && result.meta.changes > 0) {
         upsertCount++;
       }
     }
@@ -396,7 +399,7 @@ app.post("/internal/import/deliveries", async (c) => {
 });
 
 // Manual ingest trigger
-app.post("/internal/ingest/doe", async (c) => {
+app.post("/internal/ingest/doe", webhookAuth, async (c) => {
   const start = Date.now();
 
   try {
@@ -417,8 +420,27 @@ export default {
   async scheduled(event: ScheduledEvent, env: Env) {
     log("info", "Scheduled ingest triggered", { cron: event.cron });
     try {
-      await runDoeAllocations(env);
-      log("info", "Scheduled ingest completed successfully");
+      // Run both fixture-based and live DOE hub ingests
+      await Promise.allSettled([
+        runDoeAllocations(env),
+        runDOEHubIngest(env)
+      ]).then(results => {
+        const [fixtureResult, hubResult] = results;
+        
+        if (fixtureResult.status === 'fulfilled') {
+          log("info", "Fixture ingest completed successfully");
+        } else {
+          logError("Fixture ingest failed", fixtureResult.reason);
+        }
+        
+        if (hubResult.status === 'fulfilled') {
+          log("info", "DOE hub ingest completed successfully");
+        } else {
+          logError("DOE hub ingest failed", hubResult.reason);
+        }
+      });
+      
+      log("info", "All scheduled ingests completed");
     } catch (error) {
       logError("Scheduled ingest failed", error as Error);
     }

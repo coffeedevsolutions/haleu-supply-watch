@@ -15,8 +15,13 @@ database_id = "6772f704-d89f-4be4-8c08-368d5ddd5797"
 binding = "R2"        # available at env.R2
 bucket_name = "hsw-artifacts"
 
+[[r2_buckets]]
+binding = "R2_ARTIFACTS"  # available at env.R2_ARTIFACTS
+bucket_name = "hsw-artifacts"
+
 [vars]
 API_RATE_LIMIT_PER_MIN = "60"
+PUBLIC_BASE_URL = "https://hsw-api.blake-coffee8.workers.dev"
 
 [triggers]
 crons = ["0 * * * *"] # hourly ETL tick (can be a no-op locally)

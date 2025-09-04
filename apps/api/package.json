@@ -7,11 +7,11 @@
     "build": "wrangler deploy --dry-run",
     "test": "vitest run",
     "test:watch": "vitest",
-    "seed:local": "wrangler d1 execute hsw --local --file ./seed-local.sql",
-    "seed:remote": "echo \"WARNING: This will modify production data. Type 'yes' to continue:\" && read -r confirm && [ \"$confirm\" = \"yes\" ] && wrangler d1 execute hsw --remote --file ./seed-remote.sql || echo \"Cancelled.\""
+    "seed:local": "wrangler d1 execute hsw --local --file ../../packages/database/seeds/seed-local.sql",
+    "seed:remote": "wrangler d1 execute hsw --remote --file ../../packages/database/seeds/seed-remote.sql"
   },
   "dependencies": {
-    "@hsw/db": "workspace:*",
+    "@hsw/database": "workspace:*",
     "@hsw/shared": "workspace:*",
     "drizzle-orm": "^0.33.0",
     "hono": "^4.5.7",

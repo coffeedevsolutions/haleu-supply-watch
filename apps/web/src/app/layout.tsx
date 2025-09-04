@@ -63,6 +63,20 @@ export default function RootLayout({
                 </li>
                 <li>
                   <Link 
+                    href="/documents" 
+                    style={{ 
+                      color: 'white', 
+                      textDecoration: 'none',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '0.25rem',
+                      transition: 'background-color 0.2s'
+                    }}
+                  >
+                    Documents
+                  </Link>
+                </li>
+                <li>
+                  <Link 
                     href="/design-fuel" 
                     style={{ 
                       color: 'white', 

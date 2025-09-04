@@ -1,0 +1,47 @@
+name: Data Ingest
+on:
+  schedule:
+    - cron: "5 * * * *"  # hourly at :05
+  workflow_dispatch: {}
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      API_URL: https://hsw-api.blake-coffee8.workers.dev
+      WEBHOOK_ALLOCATIONS_SECRET: ${{ secrets.WEBHOOK_ALLOCATIONS_SECRET }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
+      - name: Install dependencies
+        run: |
+          pnpm add -w node-fetch@3 cheerio@1.0.0-rc.12 pdf-parse@1.1.1
+          pnpm add -w @types/node-fetch @types/pdf-parse ts-node typescript --save-dev
+      
+      - name: Run DOE data ingest
+        run: |
+          cd scripts && npx ts-node --esm ingest/doe.ts
+      
+      - name: Run Centrus data ingest
+        run: |
+          cd scripts && npx ts-node --esm ingest/centrus.ts
+        continue-on-error: true  # Don't fail the whole job if Centrus fails
+      
+      - name: Log completion
+        run: |
+          echo "Data ingest completed at $(date)"
